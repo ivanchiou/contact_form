@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Ivan's firebase test</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    </head>
+    <body>
+        <form class="d-flex flex-column align-items-center">
+            <div class="form-group col-md-4 p-2">
+                <label for="name">Name</label>
+                <input type="text" class="form-control form-control-lg" id="name" placeholder="Enter Name">
+            </div>
+            <div class="form-group col-md-4 p-2">
+                <label for="email">Email</label>
+                <input type="email" class="form-control form-control-lg" id="email" placeholder="Enter Email">
+            </div>            
+            <div class="form-group col-md-4 p-2">
+                <label for="message">Massage</label>
+                <textarea class="form-control form-control-lg" id="message" placeholder="Enter Massage" rows="4"></textarea>
+            </div>
+            <button type="submit" class="col-md-3 btn btn-primary">Submit</button>
+        </form>
+        <div id="message-history" class="col-md-4 mx-auto"></div>
+    </body>
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-database.js"></script>
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+        https://firebase.google.com/docs/web/setup#available-libraries -->
+    <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-analytics.js"></script>
+
+    <script>
+    // Your web app's Firebase configuration
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    var firebaseConfig = {
+        apiKey: "AIzaSyBi1TivKJ0aAsuoCh1pDEqHvu22YvKiGdY",
+        authDomain: "contact-form-ed774.firebaseapp.com",
+        databaseURL: "https://contact-form-ed774-default-rtdb.firebaseio.com",
+        projectId: "contact-form-ed774",
+        storageBucket: "contact-form-ed774.appspot.com",
+        messagingSenderId: "3376266719",
+        appId: "1:3376266719:web:ef951163f4174b5626d86a",
+        measurementId: "G-DENRXVS6SX"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    firebase.analytics();
+    </script>
+    <script>
+        $('.disable').on('click', function(event) {
+            $(this).siblings(".form-control").hide();
+        });
+        $('form').on('submit', function(event) {
+            event.preventDefault();
+            let data = {
+                name: $(this).find('#name').val(),
+                email: $(this).find('#email').val(),
+                message: $(this).find('#message').val()
+            }
+            if(data.name && data.message) {
+                firebase.database().ref('test/'+data.name).set(data,function(error) {
+                    if (error) {
+                        console.log({error});
+                    } else {                           
+                        alert("success");
+                        location.reload();
+                    }
+                });
+            } else {
+                alert("please input values");
+            }
+        });
+
+        $( document ).ready(function() {
+            $.get('https://contact-form-ed774-default-rtdb.firebaseio.com/.json',
+            null,
+                function (res) {
+                    console.log(res.test);
+                    Object.keys(res.test).forEach((key, index)=>{
+                        res.test[key] && $('#message-history').append(
+                            `<h3>message ${index+1}</h3>
+                            <ul>
+                                <li>${res.test[key].name}</li>
+                                <li>${res.test[key].email}</li>
+                                <li>${res.test[key].message}</li>
+                            </ul>`
+                        )
+                    })
+                }
+            );
+        });
+    </script>
+</html>
