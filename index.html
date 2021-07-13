@@ -4,6 +4,8 @@
         <title>Contact me</title>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <link href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp" rel="stylesheet">
+        <script defer src="js/script.min.js"></script>
     </head>
     <body>
         <div class="d-flex m-4">
@@ -66,7 +68,7 @@
                     if (error) {
                         console.log({error});
                     } else {                           
-                        alert("success");
+                        console.log("create succeeded");
                         location.reload();
                     }
                 });
@@ -83,7 +85,11 @@
                         res.test[key] && $('#message-history').append(
                             `<hr>
                             <ul class="list-group text-decoration-none">
-                                <li class="list-group-item fs-4 border-0"><a class=" text-decoration-none" href="mailto:${res.test[key].email}">${res.test[key].name}</a></li>
+                                <li class="list-group-item fs-4 border-0">
+                                    <a class=" text-decoration-none" href="mailto:${res.test[key].email}">${res.test[key].name}</a>
+                                    <button class="material-icons-outlined border-0 bg-transparent" onclick="deleteMessage(this)" data-name="${res.test[key].name}">delete_forever
+                                    </button>
+                                </li>
                                 <li class="list-group-item border border-secondary rounded">${res.test[key].message}</li>
                             </ul>`
                         )
@@ -91,5 +97,15 @@
                 }
             );
         });
+
+        function deleteMessage(element){
+            firebase.database().ref('test/'+element.dataset.name).remove().then(function() {
+                console.log("Remove succeeded.")
+                location.reload();
+            })
+            .catch(function(error) {
+                console.log("Remove failed: " + error.message)
+            });
+        }
     </script>
 </html>
