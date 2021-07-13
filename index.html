@@ -1,27 +1,29 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Ivan's firebase test</title>
+        <title>Contact me</title>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     </head>
     <body>
-        <form class="d-flex flex-column align-items-center">
-            <div class="form-group col-md-4 p-2">
-                <label for="name">Name</label>
-                <input type="text" class="form-control form-control-lg" id="name" placeholder="Enter Name">
-            </div>
-            <div class="form-group col-md-4 p-2">
-                <label for="email">Email</label>
-                <input type="email" class="form-control form-control-lg" id="email" placeholder="Enter Email">
-            </div>            
-            <div class="form-group col-md-4 p-2">
-                <label for="message">Massage</label>
-                <textarea class="form-control form-control-lg" id="message" placeholder="Enter Massage" rows="4"></textarea>
-            </div>
-            <button type="submit" class="col-md-3 btn btn-primary">Submit</button>
-        </form>
-        <div id="message-history" class="col-md-4 mx-auto"></div>
+        <div class="d-flex m-4">
+            <form class="flex-fill d-flex flex-column align-items-center" style="height: 200px;">
+                <div class="form-group col-md-6 p-2">
+                    <label for="name">Name</label>
+                    <input type="text" class="form-control form-control-lg" id="name" placeholder="Enter Name">
+                </div>
+                <div class="form-group col-md-6 p-2">
+                    <label for="email">Email</label>
+                    <input type="email" class="form-control form-control-lg" id="email" placeholder="Enter Email">
+                </div>            
+                <div class="form-group col-md-6 p-2">
+                    <label for="message">Massage</label>
+                    <textarea class="form-control form-control-lg" id="message" placeholder="Enter Massage" rows="4"></textarea>
+                </div>
+                <button type="submit" class="col-md-3 btn btn-primary">Submit</button>
+            </form>
+            <div id="message-history" class="col-md-4 m-2 p-3 border border-secondary rounded fs-5">Message History</div>
+        </div>
     </body>
     <!-- The core Firebase JS SDK is always required and must be listed first -->
     <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-app.js"></script>
@@ -77,14 +79,12 @@
             $.get('https://contact-form-ed774-default-rtdb.firebaseio.com/.json',
             null,
                 function (res) {
-                    console.log(res.test);
                     Object.keys(res.test).forEach((key, index)=>{
                         res.test[key] && $('#message-history').append(
-                            `<h3>message ${index+1}</h3>
-                            <ul>
-                                <li>${res.test[key].name}</li>
-                                <li>${res.test[key].email}</li>
-                                <li>${res.test[key].message}</li>
+                            `<hr>
+                            <ul class="list-group text-decoration-none">
+                                <li class="list-group-item fs-4 border-0"><a class=" text-decoration-none" href="mailto:${res.test[key].email}">${res.test[key].name}</a></li>
+                                <li class="list-group-item border border-secondary rounded">${res.test[key].message}</li>
                             </ul>`
                         )
                     })
